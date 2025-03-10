@@ -103,11 +103,32 @@ jobs:
         run: |
           rm dist/nativeMessagingHost.exe
           mv dist/*.exe artifacts
-          
-      - name: Release
-        uses: softprops/action-gh-release@v0.1.14
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        
+      - name: Tag snapshot
+        id: tag
+        uses: tvdias/github-tagger@v0.0.1
         with:
-          files: "artifacts/**"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.date.outputs.date }}
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          release_name: ${{ steps.tag.outputs.tag }}
+          draft: false
+          prerelease: false
+          
+      # - name: Release
+      #   uses: softprops/action-gh-release@v0.1.14
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     files: "artifacts/**"
           
       - name: debug
         if: ${{ !startsWith(matrix.os, 'windows-') }}
