@@ -107,15 +107,11 @@ jobs:
           rm dist/nativeMessagingHost.exe
           mv dist/*.exe artifacts
 
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-        
       - name: Create tag
         uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
-          tag: "latest"
+          tag: "latest2"
           tag_exists_error: false
           message: "Latest release"
       
@@ -123,8 +119,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          release_name: ${{ steps.tag.outputs.tag }}
+          tag_name: ${{ steps.tag_create.outputs.tag }}
+          release_name: ${{ steps.tag_create.outputs.tag }}
           draft: false
           prerelease: false
           
