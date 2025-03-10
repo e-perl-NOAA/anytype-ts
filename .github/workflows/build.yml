@@ -103,7 +103,12 @@ jobs:
         run: |
           rm dist/nativeMessagingHost.exe
           mv dist/*.exe artifacts
-
+          
+      - name: Release
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          files: "artifacts/**"
+          
       - name: debug
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         run: |
